@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEnvelope, FaEye, FaEyeSlash, FaLock, FaUser } from 'react-icons/fa';
 import './SignUpForm.css';
 
 export default function SignUpForm() {
@@ -17,8 +17,10 @@ export default function SignUpForm() {
     const validate = () => {
         const newErrors = {};
         if (!formData.name) newErrors.name = 'Full name required';
-        if (!formData.email.includes('@')) newErrors.email = 'Invalid email';
-        if (formData.password.length < 6) newErrors.password = 'Password too short';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) newErrors.email = 'Invalid email address';
+        if (!/(?=.*[A-Z])(?=.*\d).{6,}/.test(formData.password))
+            newErrors.password = 'Password must have 6+ characters, 1 uppercase, and 1 number';
         if (formData.confirmPassword !== formData.password)
         newErrors.confirmPassword = 'Passwords do not match';
         setErrors(newErrors);
@@ -51,7 +53,7 @@ export default function SignUpForm() {
                 name="name"
                 placeholder="Full Name"
                 onChange={handleChange}
-                style={{ color: 'black' }}
+                // style={{ color: 'black' }}
                 />
             </div>
             <p className="error">{errors.name}</p>
